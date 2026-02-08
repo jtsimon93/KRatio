@@ -46,16 +46,24 @@ void RatioCalculator::recalculate() {
   if (!(m_totalVolume > 0.0)) {
     m_concentrate = 0.0;
     m_concentrateDisplay.clear();
+    m_secondaryConcentrate = 0.0;
+    m_secondaryConcentrateDisplay.clear();
     m_error = QStringLiteral("Total volume must be > 0");
     Q_EMIT errorChanged();
+    Q_EMIT concentrateDisplayChanged();
+    Q_EMIT secondaryConcentrateDisplayChanged();
     return;
   }
 
   if (!(m_ratioA > 0.0) || !(m_ratioB > 0.0)) {
     m_concentrate = 0.0;
     m_concentrateDisplay.clear();
+    m_secondaryConcentrate = 0.0;
+    m_secondaryConcentrateDisplay.clear();
     m_error = QStringLiteral("Total volume must be > 0");
     Q_EMIT errorChanged();
+    Q_EMIT concentrateDisplayChanged();
+    Q_EMIT secondaryConcentrateDisplayChanged();
     return;
   }
 
@@ -63,10 +71,53 @@ void RatioCalculator::recalculate() {
   const double concentrate = m_totalVolume * (m_ratioB / totalParts);
 
   m_concentrate = concentrate;
-  m_concentrateDisplay = QString::number(concentrate);
+
+  // Format main display
+  QString mainUnit;
+  switch (m_totalUnit) {
+  case Gallons:
+    mainUnit = QStringLiteral(" gal");
+    break;
+  case Liters:
+    mainUnit = QStringLiteral(" L");
+    break;
+  case Milliliters:
+    mainUnit = QStringLiteral(" mL");
+  }
+
+  m_concentrateDisplay = QLocale().toString(concentrate, 'f', 3) + mainUnit;
+
+  // Compute secondary display (smaller unit)
+  double secondaryValue = 0.0;
+  QString secondaryUnit;
+  switch (m_totalUnit) {
+  case Gallons:
+    secondaryValue = concentrate * 128.0;
+    secondaryUnit = QStringLiteral(" fl oz");
+    break;
+  case Liters:
+    secondaryValue = concentrate * 1000.0;
+    secondaryUnit = QStringLiteral(" mL");
+    break;
+  case Milliliters:
+    // if large, show liters; otherwise milliliters
+    if (concentrate >= 1000.0) {
+      secondaryValue = concentrate / 1000.0;
+      secondaryUnit = QStringLiteral(" L");
+    } else {
+      secondaryValue = concentrate;
+      secondaryUnit = QStringLiteral(" mL");
+    }
+    break;
+  }
+
+  m_secondaryConcentrate = secondaryValue;
+  m_secondaryConcentrateDisplay = QLocale().toString(secondaryValue, 'f', 3) + secondaryUnit;
 
   Q_EMIT concentrateChanged();
   Q_EMIT concentrateDisplayChanged();
+  Q_EMIT concentrateDisplayChanged();
+  Q_EMIT secondaryConcentrateDisplayChanged();
 }
 
 void RatioCalculator::reset() {

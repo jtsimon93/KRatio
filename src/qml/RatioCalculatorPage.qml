@@ -153,13 +153,23 @@ Kirigami.ScrollablePage {
 			text: calc ? calc.concentrateDisplay : ""
 		    }
 
+		    Controls.Label {
+			id: secondaryResultLabel
+			font.pixelSize: Kirigami.Theme.defaultFont.pixelSize;
+			color: "gray"
+			text: calc ? calc.secondaryConcentrateDisplay: ""
+		    }
+
 		    Connections {
 			target: calc
 			function onConcentrateDisplayChanged() {
 			    resultLabel.text = calc.concentrateDisplay
 			}
-		    }
 
+			function onSecondaryConcentrateDisplayChanged() {
+			    secondaryResultLabel.text = calc.secondaryConcentrateDisplay
+			}
+		    }
 		}
 	    }
 
