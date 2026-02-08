@@ -14,7 +14,7 @@ KRatio is designed to be fast, clear, and practical.
 
 
 ## Screenshots
-*(Coming soon)*
+![Screenshot of KRatio](./screenshots/screenshot1.png)
 
 
 ## Build Requirements
