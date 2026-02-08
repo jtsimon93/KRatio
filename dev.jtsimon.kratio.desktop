@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=KRatio
+Exec=kratio
+Icon=dev.jtsimon.kratio
+Type=Application
+Terminal=false
+Categories=Utility
