@@ -20,6 +20,11 @@ public:
   Q_PROPERTY(double concentrate READ concentrate NOTIFY concentrateChanged)
   Q_PROPERTY(QString concentrateDisplay READ concentrateDisplay NOTIFY
                  concentrateDisplayChanged)
+
+  Q_PROPERTY(
+      QString secondaryConcentrateDisplay READ secondaryConcentrateDisplay
+          NOTIFY secondaryConcentrateDisplayChanged)
+  
   Q_PROPERTY(QString error READ error NOTIFY errorChanged)
 
   explicit RatioCalculator(QObject *parent = nullptr);
@@ -38,6 +43,12 @@ public:
 
   double concentrate() const { return m_concentrate; }
   QString concentrateDisplay() const { return m_concentrateDisplay; }
+
+  double secondaryConcentrate() const { return m_secondaryConcentrate; }
+  QString secondaryConcentrateDisplay() const {
+    return m_secondaryConcentrateDisplay;
+  }
+
   QString error() const { return m_error; }
 
   Q_INVOKABLE void recalculate();
@@ -51,6 +62,7 @@ Q_SIGNALS:
   void errorChanged();
   void concentrateChanged();
   void concentrateDisplayChanged();
+  void secondaryConcentrateDisplayChanged();
 
 private:
   double m_totalVolume = 0.0;
@@ -60,5 +72,7 @@ private:
 
   double m_concentrate = 0.0;
   QString m_concentrateDisplay;
+  double m_secondaryConcentrate = 0.0;
+  QString m_secondaryConcentrateDisplay;
   QString m_error;
 };
